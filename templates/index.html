@@ -92,7 +92,7 @@
       function set_temp() {
         fetch("/introduce/read").then((res) => res.json()).then((data) => {
           let rows = data['result'];
-
+          console.log(rows)
           $('.member-cards').remove();
           // console.log(data);
 
@@ -103,13 +103,13 @@
             let _id = a['_id'];
 
             let temp_html = `<div class="col-3 member-cards" data-num="${_id}">
-                                    <div class="card shadow-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                      <img src="${image}" class="card-img-top" alt="멤버 사진" />
-                                      <div class="card-body">
-                                        <h5 class="card-title">${name}</h5>
-                                      </div>
-                                    </div>
-                                  </div>`;
+                              <div class="card shadow-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                <img src="${image}" class="card-img-top" alt="멤버 사진" />
+                                <div class="card-body">
+                                  <h5 class="card-title">${name}</h5>
+                                </div>
+                              </div>
+                            </div>`;
             $('#pills-members .row').prepend(temp_html);
 
           });
@@ -122,13 +122,13 @@
             $('.modal-info').attr('data-num', id);
 
             let all_id = rows.map(rows => rows['_id'])
-            // console.log(all_id);
+            console.log(all_id);
 
             let idxNum = $.inArray(id, all_id);
-            // console.log(idxNum);
+            console.log(idxNum);
 
             let this_data = rows[idxNum];
-            // console.log(this_data);
+            console.log(this_data);
 
             let modal_name = this_data['name'];
             let modal_image = this_data['img'];
@@ -281,7 +281,6 @@
 
           });
 
-
         });
       }
 
@@ -331,31 +330,7 @@
 
       $('.del-btn').click(delete_info);
 
-      function update_info() {
-        let image = $("#floatingInput1").val();
-        let name = $("#floatingInput2").val();
-        let mbti = $("#floatingInput3").val();
-        let blog = $("#floatingInput4").val();
-        let comment = $('.form-control.comment').val();
-
-        console.log(name, comment, image, blog, mbti);
-
-        let formData = new FormData();
-
-        formData.append("name_give", name);
-        formData.append("comment_give", comment);
-        formData.append("img_give", image);
-        formData.append("mbti_give", mbti);
-        formData.append("blog_give", blog);
-
-        fetch("/introduce/upload", { method: "POST", body: formData })
-          .then((res) => res.json())
-          .then((data) => {
-            //console.log(data)
-            alert(data["msg"]);
-            window.location.reload();
-        });
-      }
+      
 
     });
   </script>
