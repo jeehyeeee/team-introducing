@@ -145,6 +145,143 @@
 
           });
 
+          $('.edit-btn').click(function() {
+            let id = $('.modal-info').data('num');
+            // console.log(id);
+
+            let all_id = rows.map(rows => rows['_id'])
+            // console.log(all_id);
+
+            let idxNum = $.inArray(id, all_id);
+            // console.log(idxNum);
+
+            let this_data = rows[idxNum];
+            // console.log(this_data);
+
+            let modal_name = this_data['name'];
+            let modal_image = this_data['img'];
+            let modal_comment = this_data['comment'];
+            let modal_mbti = this_data['mbti'];
+            let modal_blog = this_data['blog'];
+
+            $('.change-modal').empty();
+            let temp_modal = `
+                            <div class="modal-header">
+                              <h5 class="m-0">게시글 수정하기</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              <div class="form-floating mb-2">
+                                <input type="text" class="form-control image" id="floatingInput1" placeholder="이미지 URL" value="${modal_image}"/>
+                                <label for="floatingInput1">이미지 URL</label>
+                              </div>
+                              <div class="form-floating mb-2">
+                                <input type="text" class="form-control name" id="floatingInput2" placeholder="이름" value="${modal_name}"/>
+                                <label for="floatingInput2">이름</label>
+                              </div>
+                              <div class="form-floating mb-2">
+                                <input type="text" class="form-control mbti" id="floatingInput3" placeholder="이름" value="${modal_mbti}"/>
+                                <label for="floatingInput2">MBTI</label>
+                              </div>
+                              <div class="form-floating mb-2">
+                                <input type="text" class="form-control blog" id="floatingInput4" placeholder="이름" value="${modal_blog}" />
+                                <label for="floatingInput2">블로그 주소</label>
+                              </div>
+                              <div class="form-floating">
+                                <textarea class="form-control comment" placeholder="Leave a comment here"
+                                  id="floatingTextarea">${modal_comment}</textarea>
+                                <label for="floatingTextarea">소개 작성하기</label>
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary edit-cancel" data-bs-dismiss="modal">
+                                취소
+                              </button>
+                              <button type="button" class="btn btn-primary" id="update">저장</button>
+                            </div>
+                              `;
+            
+            $('.change-modal').append(temp_modal);
+
+            $('.edit-cancel').click(function() {
+              $('.change-modal').empty();
+
+              let re_temp_modal = `
+                                  <div class="modal-header d-flex justify-content-end align-items-center">
+                                    <button type="button" class="border-0 edit-btn" title="수정">
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil"
+                                        viewBox="0 0 16 16">
+                                        <path
+                                          d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
+                                      </svg>
+                                    </button>
+                                    <button type="button" class="border-0 del-btn" title="삭제">
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3"
+                                        viewBox="0 0 16 16">
+                                        <path
+                                          d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z" />
+                                      </svg>
+                                    </button>
+                                  </div>
+                                  <div class="modal-body modal-info">
+                                    <img
+                                      src="https://images.unsplash.com/photo-1573496782432-8690d8148c46?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2681&q=80"
+                                      class="card-img-top" alt="..." />
+                                    <div class="contents-box">
+                                      <p class="contents">
+                                        박기태
+                                      </p>
+                                      <p class="contents">
+                                        ENTJ
+                                      </p>
+                                      <a class="contents d-block mb-3">
+                                        블로그
+                                      </a>
+                                      <p class="contents">
+                                        안녕하세요. 성실한 웹 개발자가 되겠습니다!
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                      Close
+                                    </button>
+                                  </div>
+                                  `;
+
+              window.location.reload();
+              $('.change-modal').append(re_temp_modal);
+            });
+
+            $('#update').click(function() {
+              let image = $("#floatingInput1").val();
+              let name = $("#floatingInput2").val();
+              let mbti = $("#floatingInput3").val();
+              let blog = $("#floatingInput4").val();
+              let comment = $('.form-control.comment').val();
+
+              console.log(name, comment, image, blog, mbti);
+
+              let formData = new FormData();
+
+              formData.append("name_give", name);
+              formData.append("comment_give", comment);
+              formData.append("img_give", image);
+              formData.append("mbti_give", mbti);
+              formData.append("blog_give", blog);
+              formData.append("_id_give", id);
+
+              fetch("/introduce/update", { method: "POST", body: formData })
+                .then((res) => res.json())
+                .then((data) => {
+                  alert(data["msg"]);
+                  window.location.reload();
+              });
+            });
+
+          });
+
+
         });
       }
 
@@ -252,7 +389,7 @@
       <h2 class="mb-4">예없예팀</h2>
       <div class="row">
         <div class="col-4">
-          <img src="https://i.postimg.cc/k4yXgKq7/hq720.webp" alt="" />
+          <img src="https://i.postimg.cc/k4yXgKq7/hq720.webp" alt="주우재" />
         </div>
         <div class="col-8 border">
           <p>
@@ -301,9 +438,9 @@
     <!-- Modal: 멤버 자세히보기 -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
-        <div class="modal-content">
+        <div class="modal-content change-modal">
           <div class="modal-header d-flex justify-content-end align-items-center">
-            <button type="button" class="border-0" title="수정">
+            <button type="button" class="border-0 edit-btn" title="수정">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil"
                 viewBox="0 0 16 16">
                 <path
