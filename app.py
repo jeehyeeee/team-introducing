@@ -12,34 +12,55 @@ db = client.dbsparta
 def home():
     return render_template('index.html')
 
+#   게시글 작성
 @app.route("/introduce", methods=["POST"])
 def info_post():
-    id_receive = request.form['_id_give']
     name_receive = request.form['name_give']
-    comment_receive = request.form['comment_give']
     img_receive = request.form['img_give']
-    pw_receive = request.form['pw_give']
+    comment_receive = request.form['comment_give']
 
     doc = {
-        '_id' : id_receive,
         'name' : name_receive,
-        'comment' : comment_receive,
         'img' : img_receive,
-        'pw' : pw_receive
+        'comment' : comment_receive
     }
 
     db.introduce.insert_one(doc)
 
     return jsonify({'msg':'게시글 작성 완료!'})
 
+#   게시글 수정
+@app.route("/introduce/update", methods=["POST"])
+def modify_info():
+    name_receive = request.form['name_give']
+    comment_receive = request.form['comment_give']
+    img_receive = request.form['img_give']
+    id_receive = request.form['_id_give']
+    
+    doc = {
+        'name' : name_receive,
+        'comment' : comment_receive,
+        'img' : img_receive
+    }
+    print("확인", id_receive, doc)
+
+    db.introduce.update_one({"_id": ObjectId(id_receive)}, {"$set" : doc})
+
+    return jsonify({'msg':'게시글 수정 완료!'})
+
+
+
+#   게시글 불러오기
+from bson.objectid import ObjectId
+
 @app.route("/introduce", methods=["GET"])
 def info_get():
-    all_info = list(db.introduce.find({},{'_id':True, 'name': True, 'img' : True, 'star' : True, 'comment' : True, 'pw' : True}))
+    all_info = list(db.introduce.find({}))
     
     result = []
     for info in all_info:
-        info['_id'] = str(info['_id']) # convert the ObjectId to a string
-        result.append(all_info)
+        info['_id'] = str(ObjectId(info['_id'])) # convert the ObjectId to a string
+        result.append(info)
 
     return jsonify({'result': result})
 
