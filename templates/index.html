@@ -122,13 +122,13 @@
             $('.modal-info').attr('data-num', id);
 
             let all_id = rows.map(rows => rows['_id'])
-            console.log(all_id);
+            // console.log(all_id);
 
             let idxNum = $.inArray(id, all_id);
-            console.log(idxNum);
+            // console.log(idxNum);
 
             let this_data = rows[idxNum];
-            console.log(this_data);
+            // console.log(this_data);
 
             let modal_name = this_data['name'];
             let modal_image = this_data['img'];
@@ -149,7 +149,7 @@
             let id = $('.modal-info').data('num');
             // console.log(id);
 
-            let all_id = rows.map(rows => rows['_id'])
+            let all_id = rows.map(rows => rows['_id']);
             // console.log(all_id);
 
             let idxNum = $.inArray(id, all_id);
@@ -253,7 +253,9 @@
               $('.change-modal').append(re_temp_modal);
             });
 
-            $('#update').click(function() {
+            $('#update').click(edit_check);
+
+            function update() {
               let image = $("#floatingInput1").val();
               let name = $("#floatingInput2").val();
               let mbti = $("#floatingInput3").val();
@@ -277,9 +279,41 @@
                   alert(data["msg"]);
                   window.location.reload();
               });
-            });
+            };
 
+            function edit_check() {
+                const checkImg = $("#floatingInput1");
+                const checkName = $("#floatingInput2");
+                const checkMbti = $("#floatingInput3");
+                const checkBlog = $("#floatingInput4");
+                const checkComment = $('.form-control.comment');
+  
+                if ( !checkImg.val() ) {
+                    alert('이미지URL을 입력해 주세요');
+                    checkImg.focus();
+                    return false;
+                } else if ( checkName.val() == 0 ) {
+                    alert('이름을 입력해 주세요');
+                    checkName.focus();
+                    return false;
+                } else if ( !checkMbti.val() ) {
+                    alert('MBTI를 입력해 주세요');
+                    checkMbti.focus();
+                    return false;
+                } else if ( !checkBlog.val() ) {
+                    alert('블로그 URL을 입력해 주세요');
+                    checkBlog.focus();
+                    return false;
+                } else if ( !checkComment.val() ) {
+                    alert('자기소개를 입력해 주세요');
+                    checkComment.focus();
+                    return false;
+                } else {
+                  update()
+                }
+            }
           });
+
 
         });
       }
@@ -304,13 +338,13 @@
         fetch("/introduce/upload", { method: "POST", body: formData })
           .then((res) => res.json())
           .then((data) => {
-            //console.log(data)
+            //console.log(data);
             alert(data["msg"]);
             window.location.reload();
         });
       }
 
-      $('#submit').click(save_comment);
+      $('#submit').click(share_check);
 
       function delete_info() {
             let id = $('.modal-info').data('num');
@@ -319,18 +353,57 @@
 
             formData.append("_id_give", id);
 
-            fetch("/introduce/delete", { method: "POST", body: formData })
-              .then((res) => res.json())
-              .then((data) => {
-                //console.log(data)
-                alert(data["msg"]);
-                window.location.reload();
-            });
+            let confirmDel = confirm('정말 삭제하시겠습니까?');
+
+            if(confirmDel) {
+              fetch("/introduce/delete", { method: "POST", body: formData })
+                .then((res) => res.json())
+                .then((data) => {
+                  //console.log(data)
+                  alert(data["msg"]);
+                  window.location.reload();
+              });
+            }
+
       }
 
       $('.del-btn').click(delete_info);
 
-      
+      //  유효성 검사
+
+      function share_check() {
+        const checkImg = $("#floatingInput1");
+        const checkName = $("#floatingInput2");
+        const checkMbti = $("#floatingInput3");
+        const checkBlog = $("#floatingInput4");
+        const checkComment = $('.form-control.comment');
+
+        if ( !checkImg.val() ) {      //  frn의 product의 value값이 없을 때 = input에 입력한 값이 없을 때
+          alert('이미지 URL을 입력해 주세요');
+            checkImg.focus();
+            return false;   //  경고창을 확인한 후 페이지가 넘어가지 않고 그대로 유지하기 위함, method빼면 못넘어감.
+        } else if ( checkName.val() == 0 ) {
+            alert('이름을 입력해 주세요');
+            checkName.focus();
+            return false;
+        } else if ( !checkMbti.val() ) {
+            alert('MBTI를 입력해 주세요');
+            checkMbti.focus();
+            return false;
+        } else if ( !checkBlog.val() ) {
+            alert('블로그 URL을 입력해 주세요');
+            checkBlog.focus();
+            return false;
+        } else if ( !checkComment.val() ) {
+            alert('자기소개를 입력해 주세요');
+            checkComment.focus();
+            return false;
+        } else {
+            save_comment();
+        }
+    }
+
+    
 
     });
   </script>
