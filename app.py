@@ -34,7 +34,7 @@ def info_post():
     return jsonify({'msg':'게시글 작성 완료!'})
 
 #   게시글 수정
-@app.route("/introduce/update", methods=["POST"])
+@app.route("/introduce/update", methods=["PUT"])
 def modify_info():
     name_receive = request.form['name_give']
     comment_receive = request.form['comment_give']
@@ -57,7 +57,7 @@ def modify_info():
     return jsonify({'msg':'게시글 수정 완료!'})
 
 #   게시글 삭제
-@app.route("/introduce/delete", methods=["POST"])
+@app.route("/introduce/delete", methods=["DELETE"])
 def del_info():
     id_receive = request.form['_id_give']
 

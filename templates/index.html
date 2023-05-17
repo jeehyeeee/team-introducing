@@ -150,28 +150,28 @@
             let temp_modal = `
                             <div class="modal-header">
                               <h5 class="m-0">게시글 수정하기</h5>
-                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
                             </div>
                             <div class="modal-body">
                               <div class="form-floating mb-2">
-                                <input type="text" class="form-control image" id="floatingInput1" placeholder="이미지 URL" value="${modal_image}"/>
+                                <input type="text" class="form-control image" id="floatingInput1-2" placeholder="이미지 URL" value="${modal_image}"/>
                                 <label for="floatingInput1">이미지 URL</label>
                               </div>
                               <div class="form-floating mb-2">
-                                <input type="text" class="form-control name" id="floatingInput2" placeholder="이름" value="${modal_name}"/>
+                                <input type="text" class="form-control name" id="floatingInput2-2" placeholder="이름" value="${modal_name}"/>
                                 <label for="floatingInput2">이름</label>
                               </div>
                               <div class="form-floating mb-2">
-                                <input type="text" class="form-control mbti" id="floatingInput3" placeholder="이름" value="${modal_mbti}"/>
+                                <input type="text" class="form-control mbti" id="floatingInput3-2" placeholder="이름" value="${modal_mbti}"/>
                                 <label for="floatingInput2">MBTI</label>
                               </div>
                               <div class="form-floating mb-2">
-                                <input type="text" class="form-control blog" id="floatingInput4" placeholder="이름" value="${modal_blog}" />
+                                <input type="text" class="form-control blog" id="floatingInput4-2" placeholder="이름" value="${modal_blog}" />
                                 <label for="floatingInput2">블로그 주소</label>
                               </div>
                               <div class="form-floating">
-                                <textarea class="form-control comment" placeholder="Leave a comment here"
-                                  id="floatingTextarea">${modal_comment}</textarea>
+                                <textarea class="form-control" placeholder="Leave a comment here"
+                                  id="floatingTextarea-2">${modal_comment}</textarea>
                                 <label for="floatingTextarea">소개 작성하기</label>
                               </div>
                             </div>
@@ -185,8 +185,14 @@
             
             $('.change-modal').append(temp_modal);
 
-            //  수정 모달에서 취소 버튼
-            $('.edit-cancel').click(function() {
+            //  수정 모달에서 취소, X 버튼
+            $('.edit-cancel').click(re_temp_modal);
+            // $(document).on('click', '.edit-cancel', re_temp_modal);
+            $(document).on('click', '.exit-edit', re_temp_modal);
+            // $(document).on('click','#exampleModal', re_temp_modal);
+            
+            
+            function re_temp_modal() {
               let id = $('.modal-info').data('num');
 
               let all_id = rows.map(rows => rows['_id']);
@@ -248,16 +254,16 @@
 
               $('.change-modal').append(re_temp_modal);
 
-            });
+            };
 
             //  수정하기 클릭
             $('#update').click(edit_check);
 
-            const $imgInput = $("#floatingInput1");
-            const $nameInput = $("#floatingInput2");
-            const $mbtiInput = $("#floatingInput3");
-            const $blogInput = $("#floatingInput4");
-            const $commentInput = $('.form-control.comment');
+            const $imgInput = $("#floatingInput1-2");
+            const $nameInput = $("#floatingInput2-2");
+            const $mbtiInput = $("#floatingInput3-2");
+            const $blogInput = $("#floatingInput4-2");
+            const $commentInput = $('#floatingTextarea-2');
 
             function edit_check() {
               if ( !$imgInput.val() ) {
@@ -301,7 +307,7 @@
               formData.append("blog_give", blog);
               formData.append("_id_give", id);
 
-              fetch("/introduce/update", { method: "POST", body: formData })
+              fetch("/introduce/update", { method: "PUT", body: formData })
                 .then((res) => res.json())
                 .then((data) => {
                   alert(data["msg"]);
@@ -320,7 +326,7 @@
       const nameInput = $("#floatingInput2");
       const mbtiInput = $("#floatingInput3");
       const blogInput = $("#floatingInput4");
-      const commentInput = $('.form-control.comment');
+      const commentInput = $('#floatingTextarea');
 
       function save_check() {
         if ( !imgInput.val() ) {
@@ -384,7 +390,7 @@
         let confirmDel = confirm('정말 삭제하시겠습니까?');
 
         if(confirmDel) {
-          fetch("/introduce/delete", { method: "POST", body: formData })
+          fetch("/introduce/delete", { method: "DELETE", body: formData })
             .then((res) => res.json())
             .then((data) => {
               alert(data["msg"]);
