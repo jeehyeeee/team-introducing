@@ -58,20 +58,16 @@
     }
 
     .contents-box {
-      /* border: 1px solid red; */
       margin-top: 20px;
       text-align: center;
     }
 
     .contents {
-      /* border: 1px solid; */
       border-radius: 20px;
     }
 
     .contents:last-child {
-      /* border: 1px solid blue; */
       height: 60px;
-      /* overflow-y: scroll; */
     }
     
     h1 {
@@ -79,22 +75,16 @@
       color: #fff;
     }
 
-    /* .add-btn {
-      height: 316px;
-    } */
   </style>
   <script>
     $(function () {
-      $(document).ready(function () {
-        set_temp();
-      });
+      set_temp();
 
       function set_temp() {
         fetch("/introduce/read").then((res) => res.json()).then((data) => {
           let rows = data['result'];
-          console.log(rows)
+
           $('.member-cards').remove();
-          // console.log(data);
 
           rows.forEach((a) => {
             let image = a['img'];
@@ -114,28 +104,22 @@
 
           });
 
-          // $('.modal-info img').attr('src', )
-
           $('.member-cards').click(function () {
             let id = $(this).data('num');
-            // console.log(id);
+
             $('.modal-info').attr('data-num', id);
 
-            let all_id = rows.map(rows => rows['_id'])
-            // console.log(all_id);
+            let all_id = rows.map(rows => rows['_id']);
 
             let idxNum = $.inArray(id, all_id);
-            // console.log(idxNum);
 
             let this_data = rows[idxNum];
-            // console.log(this_data);
 
             let modal_name = this_data['name'];
             let modal_image = this_data['img'];
             let modal_comment = this_data['comment'];
             let modal_mbti = this_data['mbti'];
             let modal_blog = this_data['blog'];
-            // console.log(modal_comment, modal_image, modal_name);
 
             $('.modal-body.modal-info img').attr('src', modal_image);
             $('.modal-body.modal-info .contents-box p:first-child').text(modal_name);
@@ -145,18 +129,15 @@
 
           });
 
+          //  수정하기 관련
           $('.edit-btn').click(function() {
             let id = $('.modal-info').data('num');
-            // console.log(id);
 
             let all_id = rows.map(rows => rows['_id']);
-            // console.log(all_id);
 
             let idxNum = $.inArray(id, all_id);
-            // console.log(idxNum);
 
             let this_data = rows[idxNum];
-            // console.log(this_data);
 
             let modal_name = this_data['name'];
             let modal_image = this_data['img'];
@@ -165,6 +146,7 @@
             let modal_blog = this_data['blog'];
 
             $('.change-modal').empty();
+
             let temp_modal = `
                             <div class="modal-header">
                               <h5 class="m-0">게시글 수정하기</h5>
@@ -203,6 +185,7 @@
             
             $('.change-modal').append(temp_modal);
 
+            //  수정 모달에서 취소 버튼
             $('.edit-cancel').click(function() {
               $('.change-modal').empty();
 
@@ -250,19 +233,52 @@
                                   `;
 
               window.location.reload();
+
               $('.change-modal').append(re_temp_modal);
+
             });
 
+            //  수정하기 클릭
             $('#update').click(edit_check);
 
-            function update() {
-              let image = $("#floatingInput1").val();
-              let name = $("#floatingInput2").val();
-              let mbti = $("#floatingInput3").val();
-              let blog = $("#floatingInput4").val();
-              let comment = $('.form-control.comment').val();
+            const $imgInput = $("#floatingInput1");
+            const $nameInput = $("#floatingInput2");
+            const $mbtiInput = $("#floatingInput3");
+            const $blogInput = $("#floatingInput4");
+            const $commentInput = $('.form-control.comment');
 
-              console.log(name, comment, image, blog, mbti);
+            function edit_check() {
+              if ( !$imgInput.val() ) {
+                  alert('이미지URL을 입력해 주세요');
+                  $imgInput.focus();
+                  return false;
+              } else if ( !$nameInput.val() ) {
+                  alert('이름을 입력해 주세요');
+                  $nameInput.focus();
+                  return false;
+              } else if ( !$mbtiInput.val() ) {
+                  alert('MBTI를 입력해 주세요');
+                  $mbtiInput.focus();
+                  return false;
+              } else if ( !$blogInput.val() ) {
+                  alert('블로그 URL을 입력해 주세요');
+                  $blogInput.focus();
+                  return false;
+              } else if ( !$commentInput.val() ) {
+                  alert('자기소개를 입력해 주세요');
+                  $commentInput.focus();
+                  return false;
+              } else {
+                update()
+              }
+            }
+
+            function update() {
+              let image = $imgInput.val();
+              let name = $nameInput.val();
+              let mbti = $mbtiInput.val();
+              let blog = $blogInput.val();
+              let comment = $commentInput.val();
 
               let formData = new FormData();
 
@@ -280,52 +296,52 @@
                   window.location.reload();
               });
             };
-
-            function edit_check() {
-                const checkImg = $("#floatingInput1");
-                const checkName = $("#floatingInput2");
-                const checkMbti = $("#floatingInput3");
-                const checkBlog = $("#floatingInput4");
-                const checkComment = $('.form-control.comment');
-  
-                if ( !checkImg.val() ) {
-                    alert('이미지URL을 입력해 주세요');
-                    checkImg.focus();
-                    return false;
-                } else if ( checkName.val() == 0 ) {
-                    alert('이름을 입력해 주세요');
-                    checkName.focus();
-                    return false;
-                } else if ( !checkMbti.val() ) {
-                    alert('MBTI를 입력해 주세요');
-                    checkMbti.focus();
-                    return false;
-                } else if ( !checkBlog.val() ) {
-                    alert('블로그 URL을 입력해 주세요');
-                    checkBlog.focus();
-                    return false;
-                } else if ( !checkComment.val() ) {
-                    alert('자기소개를 입력해 주세요');
-                    checkComment.focus();
-                    return false;
-                } else {
-                  update()
-                }
-            }
           });
-
-
         });
       }
+      //  /set_temp
 
-      function save_comment() {
-        let image = $("#floatingInput1").val();
-        let name = $("#floatingInput2").val();
-        let mbti = $("#floatingInput3").val();
-        let blog = $("#floatingInput4").val();
-        let comment = $('.form-control.comment').val();
+      //  작성
+      $('#submit').click(save_check);
 
-        console.log(name, comment, image, blog, mbti);
+      const imgInput = $("#floatingInput1");
+      const nameInput = $("#floatingInput2");
+      const mbtiInput = $("#floatingInput3");
+      const blogInput = $("#floatingInput4");
+      const commentInput = $('.form-control.comment');
+
+      function save_check() {
+        if ( !imgInput.val() ) {
+            alert('이미지 URL을 입력해 주세요');
+            imgInput.focus();
+            return false;
+        } else if ( !nameInput.val() ) {
+            alert('이름을 입력해 주세요');
+            nameInput.focus();
+            return false;
+        } else if ( !mbtiInput.val() ) {
+            alert('MBTI를 입력해 주세요');
+            mbtiInput.focus();
+            return false;
+        } else if ( !blogInput.val() ) {
+            alert('블로그 URL을 입력해 주세요');
+            blogInput.focus();
+            return false;
+        } else if ( !commentInput.val() ) {
+            alert('자기소개를 입력해 주세요');
+            commentInput.focus();
+            return false;
+        } else {
+            save_info();
+        }
+      }
+
+      function save_info() {
+        let image = imgInput.val();
+        let name = nameInput.val();
+        let mbti = mbtiInput.val();
+        let blog = blogInput.val();
+        let comment = commentInput.val();
 
         let formData = new FormData();
 
@@ -338,73 +354,32 @@
         fetch("/introduce/upload", { method: "POST", body: formData })
           .then((res) => res.json())
           .then((data) => {
-            //console.log(data);
             alert(data["msg"]);
             window.location.reload();
         });
       }
 
-      $('#submit').click(share_check);
-
-      function delete_info() {
-            let id = $('.modal-info').data('num');
-
-            let formData = new FormData();
-
-            formData.append("_id_give", id);
-
-            let confirmDel = confirm('정말 삭제하시겠습니까?');
-
-            if(confirmDel) {
-              fetch("/introduce/delete", { method: "POST", body: formData })
-                .then((res) => res.json())
-                .then((data) => {
-                  //console.log(data)
-                  alert(data["msg"]);
-                  window.location.reload();
-              });
-            }
-
-      }
-
+      //  삭제 
       $('.del-btn').click(delete_info);
 
-      //  유효성 검사
+      function delete_info() {
+        let id = $('.modal-info').data('num');
 
-      function share_check() {
-        const checkImg = $("#floatingInput1");
-        const checkName = $("#floatingInput2");
-        const checkMbti = $("#floatingInput3");
-        const checkBlog = $("#floatingInput4");
-        const checkComment = $('.form-control.comment');
+        let formData = new FormData();
 
-        if ( !checkImg.val() ) {      //  frn의 product의 value값이 없을 때 = input에 입력한 값이 없을 때
-          alert('이미지 URL을 입력해 주세요');
-            checkImg.focus();
-            return false;   //  경고창을 확인한 후 페이지가 넘어가지 않고 그대로 유지하기 위함, method빼면 못넘어감.
-        } else if ( checkName.val() == 0 ) {
-            alert('이름을 입력해 주세요');
-            checkName.focus();
-            return false;
-        } else if ( !checkMbti.val() ) {
-            alert('MBTI를 입력해 주세요');
-            checkMbti.focus();
-            return false;
-        } else if ( !checkBlog.val() ) {
-            alert('블로그 URL을 입력해 주세요');
-            checkBlog.focus();
-            return false;
-        } else if ( !checkComment.val() ) {
-            alert('자기소개를 입력해 주세요');
-            checkComment.focus();
-            return false;
-        } else {
-            save_comment();
+        formData.append("_id_give", id);
+
+        let confirmDel = confirm('정말 삭제하시겠습니까?');
+
+        if(confirmDel) {
+          fetch("/introduce/delete", { method: "POST", body: formData })
+            .then((res) => res.json())
+            .then((data) => {
+              alert(data["msg"]);
+              window.location.reload();
+          });
         }
-    }
-
-    
-
+      }
     });
   </script>
 </head>
