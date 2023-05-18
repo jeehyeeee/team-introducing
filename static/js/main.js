@@ -10,17 +10,16 @@ $(function () {
             rows.forEach((a) => {
                 let image = a['img'];
                 let name = a['name'];
-                let comment = a['comment'];
                 let _id = a['_id'];
 
                 let temp_html = `<div class="col-3 member-cards" data-num="${_id}">
-                            <div class="card shadow-sm" data-bs-toggle="modal" data-bs-target="#exampleModalToggle">
-                              <img src="${image}" class="card-img-top" alt="멤버 사진" />
-                              <div class="card-body">
-                                <h5 class="card-title">${name}</h5>
-                              </div>
-                            </div>
-                          </div>`;
+                                    <div class="card shadow-sm" data-bs-toggle="modal" data-bs-target="#exampleModalToggle">
+                                    <img src="${image}" class="card-img-top" alt="멤버 사진" />
+                                    <div class="card-body">
+                                        <h5 class="card-title">${name}</h5>
+                                    </div>
+                                    </div>
+                                </div>`;
                 $('#pills-members .row').prepend(temp_html);
 
             });
@@ -87,6 +86,7 @@ $(function () {
             const $nameInput = $("#floatingInput2-2");
             const $mbtiInput = $("#floatingInput3-2");
             const $blogInput = $("#floatingInput4-2");
+            const $pwInput = $("#floatingInput5-2");
             const $commentInput = $('#floatingTextarea-2');
 
             function edit_check() {
@@ -111,7 +111,24 @@ $(function () {
                     $commentInput.focus();
                     return false;
                 } else {
-                    update()
+                    pw_check();
+                }
+            }
+
+            function pw_check() {
+                let id = $('.modal-info').data('num');
+                let all_id = rows.map(rows => rows['_id']);
+                let idxNum = $.inArray(id, all_id);
+                let this_data = rows[idxNum];
+                let originPw = this_data['pw'];
+                let checkPw = $pwInput.val();
+
+                if(originPw === checkPw) {
+                    update();
+                } else {
+                    alert('비밀번호를 확인해 주세요.');
+                    $pwInput.focus();
+                    return false
                 }
             }
 
@@ -139,7 +156,40 @@ $(function () {
                         window.location.reload();
                     });
             };
-        });
+
+            //  삭제 
+            $(document).on('click', '.del-btn', delete_info);
+
+            function delete_info() {
+                let id = $('.modal-info').data('num');
+                let all_id = rows.map(rows => rows['_id']);
+                let idxNum = $.inArray(id, all_id);
+                let this_data = rows[idxNum];
+                let originPw = this_data['pw'];
+
+                let checkPw = prompt('비밀번호를 입력해 주세요');
+
+                if (originPw === checkPw) {
+                    let formData = new FormData();
+    
+                    formData.append("_id_give", id);
+    
+                    let confirmDel = confirm('정말 삭제하시겠습니까?');
+    
+                    if (confirmDel) {
+                        fetch("/introduce/delete", { method: "DELETE", body: formData })
+                            .then((res) => res.json())
+                            .then((data) => {
+                                alert(data["msg"]);
+                                window.location.reload();
+                            });
+                    }
+                } else {
+                    alert('비밀번호를 확인해 주세요!');
+                    return false
+                }
+            }
+        }); //  /fetch
     }
     //  /set_temp
 
@@ -150,6 +200,7 @@ $(function () {
     const nameInput = $("#floatingInput2");
     const mbtiInput = $("#floatingInput3");
     const blogInput = $("#floatingInput4");
+    const pwInput = $('#floatingInput5');
     const commentInput = $('#floatingTextarea');
 
     function save_check() {
@@ -184,6 +235,7 @@ $(function () {
         let mbti = mbtiInput.val();
         let blog = blogInput.val();
         let comment = commentInput.val();
+        let pw = pwInput.val();
 
         let formData = new FormData();
 
@@ -192,6 +244,7 @@ $(function () {
         formData.append("img_give", image);
         formData.append("mbti_give", mbti);
         formData.append("blog_give", blog);
+        formData.append("pw_give", pw);
 
         fetch("/introduce/upload", { method: "POST", body: formData })
             .then((res) => res.json())
@@ -201,25 +254,5 @@ $(function () {
             });
     }
 
-    //  삭제 
-    $(document).on('click', '.del-btn', delete_info);
-
-    function delete_info() {
-        let id = $('.modal-info').data('num');
-
-        let formData = new FormData();
-
-        formData.append("_id_give", id);
-
-        let confirmDel = confirm('정말 삭제하시겠습니까?');
-
-        if (confirmDel) {
-            fetch("/introduce/delete", { method: "DELETE", body: formData })
-                .then((res) => res.json())
-                .then((data) => {
-                    alert(data["msg"]);
-                    window.location.reload();
-                });
-        }
-    }
+    
 });

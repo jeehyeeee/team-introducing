@@ -20,13 +20,15 @@ def info_post():
     comment_receive = request.form['comment_give']
     mbti_receive = request.form['mbti_give']
     blog_receive = request.form['blog_give']
+    pw_receive = request.form['pw_give']
 
     doc = {
         'name' : name_receive,
         'img' : img_receive,
         'mbti' : mbti_receive,
         'blog' : blog_receive,
-        'comment' : comment_receive
+        'comment' : comment_receive,
+        'pw' : pw_receive
     }
 
     db.introduce.insert_one(doc)
