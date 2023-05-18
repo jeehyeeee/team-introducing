@@ -48,7 +48,7 @@ img {
 .tab-content {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 60px;
+  padding: 30px 60px;
 }
 
 .card {
@@ -159,13 +159,17 @@ swiper-slide {
   align-items: center;
 }
 
+.team-text {
+  justify-content: center;
+}
+
 .team-text p {
   font-family: "Pretendard-Regular", "Noto Serif KR", serif;
   font-weight: 400;
 }
 
 .team-name {
-  margin-bottom: 60px;
+  margin-bottom: 30px;
   text-align: center;
 }
 
@@ -213,4 +217,24 @@ button {
 
 .swiper-wrapper {
   align-items: center;
+  padding-bottom: 40px;
 }
+
+.swiper-slide {
+  padding: 0 40px;
+}
+
+.swiper-slide:nth-child(3), .swiper-slide:nth-child(4) {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+}
+
+.swiper-slide:nth-child(3) img {
+  width: 70%;
+}
+
+.swiper-slide:nth-child(4) img {
+  width: 90%;
+}
+
