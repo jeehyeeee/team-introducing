@@ -224,6 +224,10 @@ $(function () {
             alert('자기소개를 입력해 주세요');
             commentInput.focus();
             return false;
+        } else if (!pwInput.val()) {
+            alert('비밀번호를 입력해 주세요');
+            pwInput.focus();
+            return false;
         } else {
             save_info();
         }
