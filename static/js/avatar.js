@@ -1,5 +1,5 @@
 var x;
-var $cards = $(".card");
+var $cards = $(".slide-card");
 var $style = $(".hover");
 
 $cards
