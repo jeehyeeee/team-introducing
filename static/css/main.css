@@ -89,12 +89,6 @@ h1 {
   justify-content: center;
 }
 
-.swiper-wrapper {
-  /* margin-top: 20px; */
-  /* padding-top: 20px; */
-  justify-content: center;
-}
-
 /* .col-4 {
   width: 100%;
   height: 300px;
@@ -214,5 +208,9 @@ button {
 
 .swiper-button-next,
 .swiper-button-prev {
-  color: red;
+  color: orange;
+}
+
+.swiper-wrapper {
+  align-items: center;
 }
